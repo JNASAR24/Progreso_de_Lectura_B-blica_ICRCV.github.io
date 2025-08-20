@@ -11,9 +11,13 @@
       font-family: Arial, sans-serif;
       margin: 20px;
       background: linear-gradient(to right, #42af62, #ffffff, #42af62);
-
     }
     h1 {
+      text-align: center;
+      font-size: 1.8rem;
+    }
+    h2 {
+      font-size: 1.2rem;
       text-align: center;
     }
     .container {
@@ -25,8 +29,8 @@
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
     .progress-container {
-      margin-top: 20px;
-      padding: 15px;
+      margin-top: 15px;
+      padding: 12px;
       border: 1px solid #ddd;
       border-radius: 8px;
       background: #fafafa;
@@ -40,9 +44,9 @@
     }
     .progress-fill {
       height: 100%;
-      background: #4CAF50;
+      background: linear-gradient(to right, #f00, #ff0, #0f0);
       width: 0%;
-      transition: width 0.3s ease-in-out;
+      transition: width 0.5s ease-in-out;
     }
     .hermano {
       margin-bottom: 15px;
@@ -51,10 +55,11 @@
     }
     button {
       margin-top: 5px;
-      padding: 6px 10px;
+      padding: 8px 12px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      font-size: 0.9rem;
     }
     .add-btn {
       background: #007BFF;
@@ -69,9 +74,49 @@
       color: white;
     }
     input, select {
-      padding: 5px;
+      padding: 8px;
       margin-top: 5px;
       width: 100%;
+      font-size: 0.9rem;
+    }
+
+    /* ✅ Responsive design */
+    @media (max-width: 768px) {
+      body {
+        margin: 10px;
+      }
+      .container {
+        padding: 15px;
+      }
+      h1 {
+        font-size: 1.5rem;
+      }
+      h2 {
+        font-size: 1rem;
+      }
+      button {
+        width: 100%;
+        margin-top: 8px;
+      }
+      .hermano {
+        padding: 8px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.3rem;
+      }
+      h2 {
+        font-size: 0.9rem;
+      }
+      input, select {
+        font-size: 0.85rem;
+      }
+      button {
+        font-size: 0.85rem;
+        padding: 10px;
+      }
     }
   </style>
 </head>
@@ -158,21 +203,24 @@
 
     function calcularProgreso(libro, capitulo) {
       let leidos = calcularCapitulosLeidos(libro, capitulo);
-      return ((leidos / totalCapitulos) * 100).toFixed(2);
+      return {
+        porcentaje: ((leidos / totalCapitulos) * 100).toFixed(2),
+        leidos
+      };
     }
 
     function renderHermanos() {
       const list = document.getElementById("hermanosList");
-      list.innerHTML = "";
+      let html = "";
       hermanos.forEach((h, index) => {
-        const progreso = calcularProgreso(h.libro, h.capitulo);
+        const { porcentaje, leidos } = calcularProgreso(h.libro, h.capitulo);
         let opcionesLibros = "";
         for (let l in libros) {
           opcionesLibros += `<option value="${l}" ${h.libro === l ? "selected" : ""}>${l}</option>`;
         }
         let maxCap = libros[h.libro];
 
-        list.innerHTML += `
+        html += `
           <div class="hermano">
             <h3>${h.nombre}</h3>
             <label>Libro leído:</label>
@@ -183,13 +231,14 @@
             <button class="delete-btn" onclick="eliminarHermano(${index})">🗑 Eliminar</button>
             <div class="progress-container">
               <div class="progress-bar">
-                <div class="progress-fill" style="width:${progreso}%"></div>
+                <div class="progress-fill" style="width:${porcentaje}%"></div>
               </div>
-              <p>Progreso: ${progreso}%</p>
+              <p>Progreso: ${porcentaje}% (${leidos}/${totalCapitulos} capítulos)</p>
             </div>
           </div>
         `;
       });
+      list.innerHTML = html;
     }
 
     function actualizarCapitulos(index) {
@@ -201,8 +250,14 @@
       }
     }
 
+    // Permitir agregar con Enter
+    document.getElementById("nombreHermano").addEventListener("keypress", function(e) {
+      if (e.key === "Enter") {
+        agregarHermano();
+      }
+    });
+
     renderHermanos();
   </script>
 </body>
 </html>
-
