@@ -12,16 +12,9 @@
       margin: 20px;
       background: linear-gradient(to right, #42af62, #ffffff, #42af62);
       color: #000;
-      transition: background 0.3s, color 0.3s;
     }
-    h1 {
-      text-align: center;
-      font-size: 1.8rem;
-    }
-    h2 {
-      font-size: 1.2rem;
-      text-align: center;
-    }
+    h1 { text-align: center; font-size: 1.8rem; }
+    h2 { text-align: center; font-size: 1.2rem; }
     .container {
       max-width: 600px;
       margin: auto;
@@ -29,153 +22,47 @@
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      transition: background 0.3s, color 0.3s;
     }
-    .progress-container {
-      margin-top: 15px;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      background: #fafafa;
-      transition: background 0.3s;
-    }
-    .progress-bar {
-      height: 20px;
-      background: #ddd;
-      border-radius: 10px;
-      overflow: hidden;
-      margin-top: 10px;
-    }
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(to right, #f00, #0f0);
-      width: 0%;
-      transition: width 0.5s ease-in-out;
-    }
-    .hermano {
-      margin-bottom: 15px;
-      padding: 10px;
-      border-bottom: 1px solid #ccc;
-    }
-    button {
-      margin-top: 5px;
-      padding: 8px 12px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 0.9rem;
-    }
-    .add-btn {
-      background: #007BFF;
-      color: white;
-    }
-    .delete-btn {
-      background: #dc3545;
-      color: white;
-    }
-    .save-btn {
-      background: #28a745;
-      color: white;
-    }
-    .dark-btn {
-      background: #333;
-      color: white;
-      float: right;
-    }
-    input, select {
-      padding: 8px;
-      margin-top: 5px;
-      width: 100%;
-      font-size: 0.9rem;
-    }
-
-    /* 🌙 Estilos modo oscuro */
-    body.dark {
-      background: #121212;
-      color: #eee;
-    }
-    body.dark .container {
-      background: #1e1e1e;
-      color: #eee;
-      box-shadow: 0 0 10px rgba(255,255,255,0.1);
-    }
-    body.dark .progress-container {
-      background: #2a2a2a;
-      border: 1px solid #444;
-    }
-    body.dark .progress-bar {
-      background: #444;
-    }
-
-    /* ✅ Responsive design */
-    @media (max-width: 768px) {
-      body {
-        margin: 10px;
-      }
-      .container {
-        padding: 15px;
-      }
-      h1 {
-        font-size: 1.5rem;
-      }
-      h2 {
-        font-size: 1rem;
-      }
-      button {
-        width: 100%;
-        margin-top: 8px;
-      }
-      .hermano {
-        padding: 8px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      h1 {
-        font-size: 1.3rem;
-      }
-      h2 {
-        font-size: 0.9rem;
-      }
-      input, select {
-        font-size: 0.85rem;
-      }
-      button {
-        font-size: 0.85rem;
-        padding: 10px;
-      }
-    }
+    .progress-container { margin-top: 15px; padding: 12px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa; }
+    .progress-bar { height: 20px; background: #ddd; border-radius: 10px; overflow: hidden; margin-top: 10px; }
+    .progress-fill { height: 100%; background: linear-gradient(to right, #f00, #0f0); width: 0%; transition: width 0.5s; }
+    .hermano { margin-bottom: 15px; padding: 10px; border-bottom: 1px solid #ccc; }
+    button { margin-top: 5px; padding: 8px 12px; border: none; border-radius: 5px; cursor: pointer; font-size: 0.9rem; }
+    .add-btn { background: #007BFF; color: white; }
+    .delete-btn { background: #dc3545; color: white; }
+    .save-btn { background: #28a745; color: white; }
+    .dark-btn { background: #333; color: white; float: right; }
+    input, select { padding: 8px; margin-top: 5px; width: 100%; font-size: 0.9rem; }
+    body.dark { background: #121212; color: #eee; }
+    body.dark .container { background: #1e1e1e; color: #eee; }
+    body.dark .progress-container { background: #2a2a2a; border: 1px solid #444; }
+    body.dark .progress-bar { background: #444; }
   </style>
 </head>
 <body>
   <div class="container">
-    
     <h1>Iglesia Cristiana Reformada Cristo Viene</h1>
     <h2>📖 Progreso de Lectura Bíblica</h2>
     <button class="dark-btn" onclick="toggleDarkMode()">🌙 Modo Oscuro</button>
 
-    <!-- Formulario para añadir hermanos -->
     <h3>Añadir Hermano</h3>
     <input type="text" id="nombreHermano" placeholder="Nombre del hermano">
     <button class="add-btn" onclick="agregarHermano()">➕ Agregar</button>
 
-    <!-- Lista de hermanos -->
     <div id="hermanosList"></div>
   </div>
 
   <script>
-    // 🌙 Toggle modo oscuro
+    // Toggle Dark Mode
     function toggleDarkMode() {
       document.body.classList.toggle("dark");
       localStorage.setItem("darkMode", document.body.classList.contains("dark"));
     }
-
-    // Mantener preferencia guardada
     if (localStorage.getItem("darkMode") === "true") {
       document.body.classList.add("dark");
     }
 
-    // Libros de la Biblia con capítulos (RVR1960)
+    // Libros de la Biblia con capítulos
     const libros = {
       "Génesis": 50, "Éxodo": 40, "Levítico": 27, "Números": 36, "Deuteronomio": 34,
       "Josué": 24, "Jueces": 21, "Rut": 4, "1 Samuel": 31, "2 Samuel": 24,
@@ -196,7 +83,7 @@
       "Apocalipsis": 22
     };
 
-    const totalCapitulos = Object.values(libros).reduce((a,b) => a+b,0); // 1189
+    const totalCapitulos = Object.values(libros).reduce((a,b) => a+b,0); 
     let hermanos = JSON.parse(localStorage.getItem("hermanos")) || [];
 
     function guardarLocalStorage() {
@@ -226,6 +113,20 @@
       hermanos[index].capitulo = capitulo;
       guardarLocalStorage();
       renderHermanos();
+
+      //Enviar datos a Google Sheets
+      const { porcentaje } = calcularProgreso(libro, capitulo);
+      fetch("https://script.google.com/macros/s/AKfycbxQZAS0j946bCHZk9zt0BL-CbWKwlwo7y2S9z10B5o7hVm9kZBoL35gVqgdZIqBPFpKLQ/exec", { 
+        body: JSON.stringify({
+          nombre: hermanos[index].nombre,
+          libro: libro,
+          capitulo: capitulo,
+          porcentaje: porcentaje
+        }),
+        headers: { "Content-Type": "application/json" }
+      }).then(r => r.text())
+        .then(resp => console.log("Servidor respondió:", resp))
+        .catch(err => console.error("Error:", err));
     }
 
     function calcularCapitulosLeidos(libro, capitulo) {
@@ -243,10 +144,7 @@
 
     function calcularProgreso(libro, capitulo) {
       let leidos = calcularCapitulosLeidos(libro, capitulo);
-      return {
-        porcentaje: ((leidos / totalCapitulos) * 100).toFixed(2),
-        leidos
-      };
+      return { porcentaje: ((leidos / totalCapitulos) * 100).toFixed(2), leidos };
     }
 
     function renderHermanos() {
@@ -259,7 +157,6 @@
           opcionesLibros += `<option value="${l}" ${h.libro === l ? "selected" : ""}>${l}</option>`;
         }
         let maxCap = libros[h.libro];
-
         html += `
           <div class="hermano">
             <h3>${h.nombre}</h3>
@@ -270,9 +167,7 @@
             <button class="save-btn" onclick="guardarProgreso(${index})">💾 Guardar</button>
             <button class="delete-btn" onclick="eliminarHermano(${index})">🗑 Eliminar</button>
             <div class="progress-container">
-              <div class="progress-bar">
-                <div class="progress-fill" style="width:${porcentaje}%"></div>
-              </div>
+              <div class="progress-bar"><div class="progress-fill" style="width:${porcentaje}%"></div></div>
               <p>Progreso: ${porcentaje}% (${leidos}/${totalCapitulos} capítulos)</p>
             </div>
           </div>
@@ -290,11 +185,8 @@
       }
     }
 
-    // Permitir agregar con Enter
     document.getElementById("nombreHermano").addEventListener("keypress", function(e) {
-      if (e.key === "Enter") {
-        agregarHermano();
-      }
+      if (e.key === "Enter") { agregarHermano(); }
     });
 
     renderHermanos();
