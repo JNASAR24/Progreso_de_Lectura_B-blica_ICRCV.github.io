@@ -46,7 +46,7 @@
 <body>
   
   <div class="container">
-    <h6>v 1.2.1</h6>
+    <h6>v 1.2.2</h6>
     <h1>Iglesia Cristiana Reformada Cristo Viene</h1>
     <h2>📖 Progreso de Lectura Bíblica</h2>
     <button class="dark-btn" onclick="toggleDarkMode()">🌙 Modo Oscuro</button>
@@ -122,7 +122,7 @@
 
       //Enviar datos a Google Sheets
       const { porcentaje } = calcularProgreso(libro, capitulo);
-      fetch("https://script.google.com/macros/s/AKfycbxQZAS0j946bCHZk9zt0BL-CbWKwlwo7y2S9z10B5o7hVm9kZBoL35gVqgdZIqBPFpKLQ/exec", { 
+      fetch("https://script.google.com/macros/s/AKfycbyS54IFO6K3HyB4RLpcnrrZ2HWY4wPx-IWU7AoVo-LoNfaMlZqC5fjKlPV1umu7AFajrw/exec", { 
         method: "POST",
         body: JSON.stringify({
           nombre: hermanos[index].nombre,
@@ -200,5 +200,6 @@
   </script>
 </body>
 </html>
+
 
 
