@@ -41,23 +41,29 @@
     body.dark .container { background: #1e1e1e; color: #eee; }
     body.dark .progress-container { background: #2a2a2a; border: 1px solid #444; }
     body.dark .progress-bar { background: #444; }
+    .alert {
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      background: #d4edda;
+      color: #155724;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
-  
+
   <div class="container">
-    <h6>v 1.2.2</h6>
+    <h6>v 1.2.3</h6>
     <h1>Iglesia Cristiana Reformada Cristo Viene</h1>
     <h2>📖 Progreso de Lectura Bíblica</h2>
     <button class="dark-btn" onclick="toggleDarkMode()">🌙 Modo Oscuro</button>
-
     <h3>Añadir Hermano</h3>
     <input type="text" id="nombreHermano" placeholder="Nombre del hermano">
     <button class="add-btn" onclick="agregarHermano()">➕ Agregar</button>
-
+    <div id="alertContainer"></div>
     <div id="hermanosList"></div>
   </div>
-
   <script>
     // Toggle Dark Mode
     function toggleDarkMode() {
@@ -88,8 +94,7 @@
       "1 Juan": 5, "2 Juan": 1, "3 Juan": 1, "Judas": 1,
       "Apocalipsis": 22
     };
-
-    const totalCapitulos = Object.values(libros).reduce((a,b) => a+b,0); 
+    const totalCapitulos = Object.values(libros).reduce((a,b) => a+b,0);
     let hermanos = JSON.parse(localStorage.getItem("hermanos")) || [];
 
     function guardarLocalStorage() {
@@ -120,20 +125,32 @@
       guardarLocalStorage();
       renderHermanos();
 
-      //Enviar datos a Google Sheets
+      // Enviar datos a Google Sheets usando GET
       const { porcentaje } = calcularProgreso(libro, capitulo);
-      fetch("https://script.google.com/macros/s/AKfycbyS54IFO6K3HyB4RLpcnrrZ2HWY4wPx-IWU7AoVo-LoNfaMlZqC5fjKlPV1umu7AFajrw/exec", { 
-        method: "POST",
-        body: JSON.stringify({
-          nombre: hermanos[index].nombre,
-          libro: libro,
-          capitulo: capitulo,
-          porcentaje: porcentaje
-        }),
-        headers: { "Content-Type": "application/json" }
-      }).then(r => r.text())
-        .then(resp => console.log("Servidor respondió:", resp))
-        .catch(err => console.error("Error:", err));
+      const url = `https://script.google.com/macros/s/AKfycbxXKnh8pM2CYykHiOPqCq8O1Dvm__AfiGCcO6Zh8gvtFjTlJ9Wv0GReAyKxa4L5zGWAOg/exec?
+        nombre=${encodeURIComponent(hermanos[index].nombre)}
+        &libro=${encodeURIComponent(libro)}
+        &capitulo=${capitulo}
+        &porcentaje=${porcentaje}`;
+
+      fetch(url)
+        .then(r => r.text())
+        .then(resp => {
+          console.log("Servidor respondió:", resp);
+          mostrarAlerta("Progreso guardado correctamente.");
+        })
+        .catch(err => {
+          console.error("Error:", err);
+          mostrarAlerta("Error al guardar el progreso. Intenta nuevamente.");
+        });
+    }
+
+    function mostrarAlerta(mensaje) {
+      const alertContainer = document.getElementById("alertContainer");
+      alertContainer.innerHTML = `<div class="alert">${mensaje}</div>`;
+      setTimeout(() => {
+        alertContainer.innerHTML = "";
+      }, 3000);
     }
 
     function calcularCapitulosLeidos(libro, capitulo) {
@@ -200,6 +217,3 @@
   </script>
 </body>
 </html>
-
-
-
