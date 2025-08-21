@@ -45,16 +45,15 @@
       padding: 10px;
       margin: 10px 0;
       border-radius: 5px;
-      background: #d4edda;
-      color: #155724;
       text-align: center;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <h6>v 1.2.4</h6>
+    <h6>v 1.2.5</h6>
     <h1>Iglesia Cristiana Reformada Cristo Viene</h1>
     <h2>📖 Progreso de Lectura Bíblica</h2>
     <button class="dark-btn" onclick="toggleDarkMode()">🌙 Modo Oscuro</button>
@@ -125,29 +124,34 @@
       guardarLocalStorage();
       renderHermanos();
 
-      // Enviar datos a Google Sheets usando GET
+      // Enviar datos a Google Sheets usando POST con JSON
       const { porcentaje } = calcularProgreso(libro, capitulo);
-      const url = `https://script.google.com/macros/s/AKfycbxXKnh8pM2CYykHiOPqCq8O1Dvm__AfiGCcO6Zh8gvtFjTlJ9Wv0GReAyKxa4L5zGWAOg/exec?
-        nombre=${encodeURIComponent(hermanos[index].nombre)}
-        &libro=${encodeURIComponent(libro)}
-        &capitulo=${capitulo}
-        &porcentaje=${porcentaje}`;
-
-      fetch(url)
-        .then(r => r.text())
-        .then(resp => {
-          console.log("Servidor respondió:", resp);
-          mostrarAlerta("Progreso guardado correctamente.");
+      fetch("https://script.google.com/macros/s/AKfycbxGxFqZ7tnrnNxMF695BAyA9UXiK410WUa6kAlDBS0DnENuK2t60cVJYZ7j7b7V6s-rlg/exec", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nombre: hermanos[index].nombre,
+          libro: libro,
+          capitulo: capitulo,
+          porcentaje: porcentaje
         })
-        .catch(err => {
-          console.error("Error:", err);
-          mostrarAlerta("Error al guardar el progreso. Intenta nuevamente.");
-        });
+      })
+      .then(r => r.json())
+      .then(resp => {
+        console.log("Servidor respondió:", resp);
+        mostrarAlerta(resp.message || "Progreso guardado correctamente.", "exito");
+      })
+      .catch(err => {
+        console.error("Error:", err);
+        mostrarAlerta("Error al guardar el progreso. Intenta nuevamente.", "error");
+      });
     }
 
-    function mostrarAlerta(mensaje) {
+    function mostrarAlerta(mensaje, tipo = "exito") {
       const alertContainer = document.getElementById("alertContainer");
-      alertContainer.innerHTML = `<div class="alert">${mensaje}</div>`;
+      const color = tipo === "exito" ? "#d4edda" : "#f8d7da";
+      const textColor = tipo === "exito" ? "#155724" : "#721c24";
+      alertContainer.innerHTML = `<div class="alert" style="background:${color};color:${textColor};">${mensaje}</div>`;
       setTimeout(() => {
         alertContainer.innerHTML = "";
       }, 3000);
@@ -217,4 +221,3 @@
   </script>
 </body>
 </html>
-
